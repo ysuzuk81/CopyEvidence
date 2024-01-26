@@ -1,0 +1,13 @@
+# '#'はコメント
+# コピーするエビデンスのパスを記載したファイルへのパス
+EVIDENCE_FILE_PATH=evidencepath_CopyEvidence.txt
+
+# コピーしたエビデンスを保存するフォルダへのパス
+DEST_ROOT_FOLDER_PATH=EVIDENCE
+
+# エビデンスフォルダ名の接頭辞
+EVIDENCE_FOLDER_PREFIX=Evidence_
+
+# エラーが発生しなかった時、コピー結果出力後にEnterキー入力待ちにするかどうか
+# 入力待ち状態にする場合は'WAIT_ENTER'と記載
+# WAIT_ENTER
