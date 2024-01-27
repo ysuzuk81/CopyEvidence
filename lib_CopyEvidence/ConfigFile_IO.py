@@ -1,53 +1,65 @@
-import re
+import glob
+import natsort
 import os
+import re
 
 import lib_CopyEvidence.File_IO as File_IO
 import lib_CopyEvidence.Path as Path
+import lib_CopyEvidence.ValidateEvidencePath as ValidateEvidencePath
 
-class ConfigValue:
+class Config:
     def __init__(self):
-        self.evidenceFilePath = ''
         self.destRootFolderPath = ''
         self.evidenceFolderPrefix = ''
+        self.existEvidencePathList = []
+        self.notExistEvidencePathList = []
         self.isRequireEnter = False
 
 # コンフィグ値を読み出す
-def readConfigValue(configFilePath):
-    configValue = ConfigValue()
-    isExistEvidenceFile = True
-
+def readConfig(configFilePath):
     lineList = File_IO.readLines(configFilePath)
-    for line in lineList:
-        firstChar = line[0]
-        # コメントなので読み飛ばし
-        if firstChar == '#':
-            continue
-        
-        searchResult = re.findall('EVIDENCE_FILE_PATH=(.+)', line)
-        if not searchResult == []:
-            configValue.evidenceFilePath = Path.convertPathDelimiterToSlash(searchResult[0])
-            # 存在しないファイルが指定されている場合はエラー
-            if not os.path.isfile(configValue.evidenceFilePath):
-                isExistEvidenceFile = False
-                break
-            else:
-                continue
+    # コメントは削除
+    lineList = [line for line in lineList if not line[0] == '#']
 
-        searchResult = re.findall('DEST_FOLDER_PATH=(.+)', line)
+    config = Config()
+    evidenceSrcPath = ''
+    evidencePathList = []
+    isEvidencePathBlock = False
+    for line in lineList:
+        searchResult = re.findall('COPY_DEST_FOLDER_PATH=(.+)', line)
         if not searchResult == []:
-            configValue.destRootFolderPath = Path.convertPathDelimiterToSlash(searchResult[0])
-            # 存在しないフォルダが指定されている場合はフォルダを作成する
-            if not os.path.isdir(configValue.destRootFolderPath):
-                os.makedirs(configValue.destRootFolderPath, exist_ok=True)
+            config.destRootFolderPath = Path.convertPathDelimiterToSlash(searchResult[0])
+            # 存在しないフォルダが保存先のフォルダに指定されていた場合はフォルダを新規作成する
+            if not os.path.isdir(config.destRootFolderPath):
+                os.makedirs(config.destRootFolderPath, exist_ok=True)
             continue
 
         searchResult = re.findall('EVIDENCE_FOLDER_PREFIX=(.+)', line)
         if not searchResult == []:
-            configValue.evidenceFolderPrefix = searchResult[0]
+            config.evidenceFolderPrefix = searchResult[0]
             continue
 
         if line == 'WAIT_ENTER':
-            configValue.waitEnter = True
+            config.isRequireEnter = True
             continue
-            
-    return configValue, isExistEvidenceFile
+        
+        searchResult = re.findall('EVIDENCE_SRC_PATH=(.+)', line)
+        if not searchResult == []:
+            evidenceSrcPath = Path.convertPathDelimiterToSlash(searchResult[0])
+            continue
+        
+        if line == 'EVIDENCE_PATH_START':
+            isEvidencePathBlock = True
+            continue
+        
+        if line == 'EVIDENCE_PATH_END':
+            isEvidencePathBlock = False
+            continue
+
+        if isEvidencePathBlock:
+            evidencePathList.append(Path.convertPathDelimiterToSlash(line))
+            continue
+
+    config.existEvidencePathList, config.notExistEvidencePathList = ValidateEvidencePath.validate(evidenceSrcPath, evidencePathList)
+
+    return config

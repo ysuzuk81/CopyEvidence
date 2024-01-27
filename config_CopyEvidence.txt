@@ -1,6 +1,6 @@
 # '#'はコメント
 # 作成したエビデンスフォルダを保存するフォルダへのパス
-DEST_FOLDER_PATH=EVIDENCE
+COPY_DEST_FOLDER_PATH=EVIDENCE
 
 # エビデンスフォルダ名の接頭辞
 EVIDENCE_FOLDER_PREFIX=Evidence_
@@ -9,13 +9,16 @@ EVIDENCE_FOLDER_PREFIX=Evidence_
 # 入力待ち状態にする場合は'WAIT_ENTER'と記載
 # WAIT_ENTER
 
-# エビデンスの検索位置
-SRC_FOLDER_PATH=..
+# コピーするエビデンスの検索位置
+EVIDENCE_SRC_PATH=.
 
 # コピーするエビデンスのパス
+# EVIDENCE_SRC_PATHを起点とするパス
 # START~ENDの中にパスを記載する
-EVIDENCE_PATH_START=
+EVIDENCE_PATH_START
 
+*.bat
+../CopyEvidence/././../CopyEvidence/*.bat
 
+EVIDENCE_PATH_END
 
-=EVIDENCE_PATH_END
