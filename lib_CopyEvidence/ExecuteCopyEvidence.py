@@ -57,6 +57,7 @@ def execute(commandLineArgv):
         if (existEvidencePathList == []) and (notExistEvidencePathList == []):
             executeResult.errorLogMsg += 'EVIDENCE_FILE_PATH=' + configValue.evidenceFilePath + '\n'
             executeResult.errorLogMsg += 'にエビデンスパスが記載されていません\n'
+            break
 
         # 存在しないエビデンスが指定されていた場合
         if not notExistEvidencePathList == []:
@@ -75,16 +76,16 @@ def execute(commandLineArgv):
             for evidencePath in existEvidencePathList:
                 executeResult.successLogMsg += formatEvidencePathForOutputResult(evidencePath) + '\n'
 
-        # Enter入力待ちを行うかどうか決める
-        # エラーが発生している場合、Enter入力待ちとする
-        if not executeResult.errorLogMsg == []:
-            executeResult.isRequireEnter = True
-
-        # エラーが発生しなかった場合
-        else:
-            # コンフィグ値でEnter入力待ちが指定されている場合のみ、入力待ちを行う
-            executeResult.isRequireEnter = configValue.isRequireEnter
-
         break
+
+    # Enter入力待ちを行うかどうか決める
+    # エラーが発生している場合、Enter入力待ちとする
+    if executeResult.isRaiseError():
+        executeResult.isRequireEnter = True
+
+    # エラーが発生しなかった場合
+    else:
+        # コンフィグ値でEnter入力待ちが指定されている場合のみ、入力待ちを行う
+        executeResult.isRequireEnter = configValue.isRequireEnter
 
     return executeResult
