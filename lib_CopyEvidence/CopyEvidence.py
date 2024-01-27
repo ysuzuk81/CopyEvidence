@@ -17,9 +17,9 @@ def getMaxEvidenceFolderNumber(configValue):
     return maxEvidenceFolderNum
 
 # 指定したエビデンス番号のエビデンスフォルダを作成し、パスを返す
-def makeDestEvidenceFolder(makeDestEvidenceFolderNum, configValue):
+def makeDesEvidenceFolder(makeDesEvidenceFolderNum, configValue):
     # 作成するエビデンスフォルダ名とフォルダパス
-    evidenceFolderName = configValue.evidenceFolderPrefix + str(makeDestEvidenceFolderNum)
+    evidenceFolderName = configValue.evidenceFolderPrefix + str(makeDesEvidenceFolderNum)
     destEvidenceFolderPath = Path.convertPathDelimiterToSlash(os.path.join(configValue.destRootFolderPath, evidenceFolderName))
     # エビデンスフォルダを作成
     os.makedirs(destEvidenceFolderPath)
@@ -31,9 +31,9 @@ def copyEvidence(existEvidencePathList, configValue):
     # 既存のエビデンスフォルダのうち最大のフォルダ番号を取得
     maxEvidenceFolderNum = getMaxEvidenceFolderNumber(configValue)
     # 新規で作成するコピー先のエビデンスフォルダの番号は最大番号+1
-    makeDestEvidenceFolderNum = maxEvidenceFolderNum + 1
+    makeDesEvidenceFolderNum = maxEvidenceFolderNum + 1
     # コピー先のエビデンスフォルダを作成
-    destEvidenceFolderPath = makeDestEvidenceFolder(makeDestEvidenceFolderNum, configValue)
+    destEvidenceFolderPath = makeDesEvidenceFolder(makeDesEvidenceFolderNum, configValue)
 
     # エビデンスをコピーする
     for evidencePath in existEvidencePathList:
