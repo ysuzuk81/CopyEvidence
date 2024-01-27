@@ -1,5 +1,15 @@
 import os
+import re
 import shutil
+
+def makeDesFolderPath(desRootFolderPath, srcFolderPath):
+    # 先頭の../を削除する
+    formatSrcFolderPath = re.sub(r'^(\.\.\/)+', '', srcFolderPath)
+    # 先頭の../に対しては正規化する
+    formatSrcFolderPath = os.path.normpath(formatSrcFolderPath)
+    desFolderPath = os.path.join(desRootFolderPath, formatSrcFolderPath)
+    print('make ' + desFolderPath)
+    return desFolderPath
 
 # 引数のルートフォルダー直下に、ディレクトリ構造ごとファイルをコピーする
 def copyFile(srcFilePath, desRootFolderPath):
@@ -9,7 +19,7 @@ def copyFile(srcFilePath, desRootFolderPath):
     
     # コピー先のディレクトリパスを生成
     # コピー対象のディレクトリ構造をそのままコピーするので単純に連結させる
-    desFolderPath = os.path.join(desRootFolderPath, srcFolderPath)
+    desFolderPath = makeDesFolderPath(desRootFolderPath, srcFolderPath)
     # コピー先のファイル名を生成
     # ファイル名はコピー対象のファイル名から変更しないのでそのまま
     desFileName = srcFileName
@@ -23,7 +33,7 @@ def copyFile(srcFilePath, desRootFolderPath):
 
 # 引数のルートフォルダー直下に、ディレクトリ構造ごとフォルダをコピーする
 def copyFolder(srcFolderPath, desRootFolderPath):
-    desFolderPath = os.path.join(desRootFolderPath, srcFolderPath)
+    desFolderPath = makeDesFolderPath(desRootFolderPath, srcFolderPath)
     shutil.copytree(srcFolderPath, desFolderPath, dirs_exist_ok=True)
 
 # ファイル・ディレクトリ問わず、引数のルートフォルダー直下にディレクトリ構造ごとコピーする
