@@ -7,17 +7,15 @@ def outputExecuteResult(executeResult):
     print()
 
     # 正常メッセージが存在すれば全て出力
-    if not executeResult.successMsgList == []:
+    if not executeResult.successLogMsg == '':
         print('[実行結果]')
-        for msg in executeResult.successMsgList:
-            print(msg)
+        print(executeResult.successLogMsg)
         print()
 
     # エラーメッセージが存在すれば全て出力
-    if not executeResult.errorMsgList == []:
+    if not executeResult.errorLogMsg == '':
         print('[発生したエラー]')
-        for msg in executeResult.errorMsgList:
-            print(msg)
+        print(executeResult.errorLogMsg)
         print()
 
     print('===========>')

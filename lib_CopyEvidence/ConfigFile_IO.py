@@ -2,6 +2,7 @@ import re
 import os
 
 import lib_CopyEvidence.File_IO as File_IO
+import lib_CopyEvidence.Path as Path
 
 class ConfigValue:
     def __init__(self):
@@ -24,7 +25,7 @@ def readConfigValue(configFilePath):
         
         searchResult = re.findall('EVIDENCE_FILE_PATH=(.+)', line)
         if not searchResult == []:
-            configValue.evidenceFilePath = searchResult[0]
+            configValue.evidenceFilePath = Path.convertPathDelimiterToSlash(searchResult[0])
             # 存在しないファイルが指定されている場合はエラー
             if not os.path.isfile(configValue.evidenceFilePath):
                 isExistEvidenceFile = False
@@ -34,7 +35,7 @@ def readConfigValue(configFilePath):
 
         searchResult = re.findall('DEST_ROOT_FOLDER_PATH=(.+)', line)
         if not searchResult == []:
-            configValue.destRootFolderPath = searchResult[0]
+            configValue.destRootFolderPath = Path.convertPathDelimiterToSlash(searchResult[0])
             # 存在しないフォルダが指定されている場合はフォルダを作成する
             if not os.path.isdir(configValue.destRootFolderPath):
                 os.makedirs(configValue.destRootFolderPath, exist_ok=True)

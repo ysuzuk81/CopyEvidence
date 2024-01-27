@@ -2,6 +2,7 @@ import os
 import re
 
 import lib_CopyEvidence.CopyCommand as CopyCommand
+import lib_CopyEvidence.Path as Path
 
 # 既存のエビデンスフォルダのうち最大のフォルダ番号を取得
 def getMaxEvidenceFolderNumber(configValue):
@@ -19,7 +20,7 @@ def getMaxEvidenceFolderNumber(configValue):
 def makeDestEvidenceFolder(makeDestEvidenceFolderNum, configValue):
     # 作成するエビデンスフォルダ名とフォルダパス
     evidenceFolderName = configValue.evidenceFolderPrefix + str(makeDestEvidenceFolderNum)
-    destEvidenceFolderPath = os.path.join(configValue.destRootFolderPath, evidenceFolderName)
+    destEvidenceFolderPath = Path.convertPathDelimiterToSlash(os.path.join(configValue.destRootFolderPath, evidenceFolderName))
     # エビデンスフォルダを作成
     os.makedirs(destEvidenceFolderPath)
     # 作成したフォルダのパスを返す
