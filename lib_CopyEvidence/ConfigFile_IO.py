@@ -33,7 +33,7 @@ def readConfigValue(configFilePath):
             else:
                 continue
 
-        searchResult = re.findall('DEST_ROOT_FOLDER_PATH=(.+)', line)
+        searchResult = re.findall('DEST_FOLDER_PATH=(.+)', line)
         if not searchResult == []:
             configValue.destRootFolderPath = Path.convertPathDelimiterToSlash(searchResult[0])
             # 存在しないフォルダが指定されている場合はフォルダを作成する
