@@ -6,7 +6,7 @@ import lib_CopyEvidence.Path as Path
 def makeDesFolderPath(desRootFolderPath, srcFolderPath):
     # 先頭の../を削除する
     formatSrcFolderPath = Path.deleteFrontDotDotSlash(srcFolderPath)
-    # 先頭の../に対しては正規化する
+    # 先頭以外の../に対しては正規化する
     formatSrcFolderPath = Path.convertPathDelimiterToSlash(os.path.normpath(formatSrcFolderPath))
     desFolderPath = Path.convertPathDelimiterToSlash(os.path.join(desRootFolderPath, formatSrcFolderPath))
     return desFolderPath
