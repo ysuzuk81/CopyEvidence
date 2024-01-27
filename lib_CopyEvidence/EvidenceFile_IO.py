@@ -1,9 +1,9 @@
 import glob
 import os
+import natsort
 
 import lib_CopyEvidence.File_IO as File_IO
 import lib_CopyEvidence.Path as Path
-from natsort import natsorted
 
 # エビデンスのパスを読み出して、エビデンスが存在するものとしないものを分けて返す
 def readEvidencePath(evidencePathFile):
@@ -36,7 +36,7 @@ def readEvidencePath(evidencePathFile):
     notExistEvidencePathList = list(set(notExistEvidencePathList))
 
     # ソート
-    existEvidencePathList = natsorted(existEvidencePathList)
-    notExistEvidencePathList = natsorted(notExistEvidencePathList)
+    existEvidencePathList = natsort.natsorted(existEvidencePathList)
+    notExistEvidencePathList = natsort.natsorted(notExistEvidencePathList)
     
     return existEvidencePathList, notExistEvidencePathList
