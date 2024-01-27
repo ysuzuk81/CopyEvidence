@@ -7,4 +7,4 @@ def convertPathDelimiterToSlash(path):
 
 # 先頭の../を削除する
 def deleteFrontDotDotSlash(path):
-    return re.sub(r'^(\.\.\/)+', '', path)
+    return re.sub(r'^(\.\.\/*)+', '', path)
