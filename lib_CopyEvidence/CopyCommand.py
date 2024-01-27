@@ -7,7 +7,8 @@ def makeDesFolderPath(desRootFolderPath, srcFolderPath):
     # 先頭の../を削除する
     formatSrcFolderPath = Path.deleteFrontDotDotSlash(srcFolderPath)
     # 先頭以外の../に対しては正規化する
-    formatSrcFolderPath = Path.convertPathDelimiterToSlash(os.path.normpath(formatSrcFolderPath))
+    formatSrcFolderPath = os.path.normpath(formatSrcFolderPath)
+
     desFolderPath = Path.convertPathDelimiterToSlash(os.path.join(desRootFolderPath, formatSrcFolderPath))
     return desFolderPath
 
@@ -16,7 +17,6 @@ def copyFile(srcFilePath, desRootFolderPath):
     # コピー対象のディレクトリパスとファイル名を取得
     srcFolderPath = Path.convertPathDelimiterToSlash(os.path.dirname(srcFilePath))
     srcFileName   = Path.convertPathDelimiterToSlash(os.path.basename(srcFilePath))
-    
     # コピー先のディレクトリパスを生成
     # コピー対象のディレクトリ構造をそのままコピーするので単純に連結させる
     desFolderPath = makeDesFolderPath(desRootFolderPath, srcFolderPath)
