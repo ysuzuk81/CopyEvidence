@@ -4,24 +4,23 @@ import os
 import re
 
 from lib.TextFile import TextFile
-from lib.PathString import PathString
-import lib.Error as Error
+from lib.PathLib import PathLib
 class ConfigValue:
     def __init__(self, configFilePath):
-        self.destRootFolderPath = PathString('')
+        self.destRootFolderPath = ''
         self.evidenceFolderPrefix = ''
         self.existEvidencePathList = []
         self.notExistEvidencePathList = []
         self.isRequireEnter = False
 
-        configFile = TextFile(PathString(configFilePath)).deleteCommentLine('//')
+        configFile = TextFile(PathLib.toSlashDelimiter(configFilePath)).deleteCommentLine('//')
 
         isEvidencePathBlock = False
         evidencePathStringList = []
         for textLine in configFile.textLineList:
             searchResult = re.findall('COPY_DEST_FOLDER_PATH=(.+)', textLine)
             if not searchResult == []:
-                self.destRootFolderPath = PathString(searchResult[0])
+                self.destRootFolderPath = PathLib.toSlashDelimiter(searchResult[0])
                 if os.path.isdir(self.destRootFolderPath):
                      # 存在しないフォルダが保存先のフォルダに指定されていた場合はフォルダを新規作成する
                     os.makedirs(searchResult[0], exist_ok=True)
@@ -38,7 +37,7 @@ class ConfigValue:
 
             searchResult = re.findall('EVIDENCE_SRC_PATH=(.+)', textLine)
             if not searchResult == []:
-                evidenceSrcPath = PathString(searchResult[0])
+                evidenceSrcPath = PathLib.toSlashDelimiter(searchResult[0])
                 continue
 
             if textLine == 'EVIDENCE_PATH_START':
@@ -72,8 +71,8 @@ class ConfigValue:
                 self.notExistEvidencePathList.append(targetEvidencePath)
 
         # PathString型に変換
-        self.existEvidencePathList = [str(PathString(evidencePath)) for evidencePath in self.existEvidencePathList]
-        self.notExistEvidencePathList = [str(PathString(evidencePath)) for evidencePath in self.notExistEvidencePathList]
+        self.existEvidencePathList = [PathLib.toSlashDelimiter(evidencePath) for evidencePath in self.existEvidencePathList]
+        self.notExistEvidencePathList = [PathLib.toSlashDelimiter(evidencePath) for evidencePath in self.notExistEvidencePathList]
 
         # パス名の重複を削除
         self.existEvidencePathList = list(set(self.existEvidencePathList))

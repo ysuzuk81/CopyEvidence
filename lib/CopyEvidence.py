@@ -3,7 +3,7 @@ import re
 import shutil
 
 import lib.Error as Error
-from lib.PathString import PathString
+from lib.PathLib import PathLib
 
 class CopyEvidence:
     # エビデンスをコピーして、コピー先のフォルダパスを返す
@@ -51,7 +51,7 @@ class CopyEvidence:
     def __makeDestEvidenceFolder(cls, makeDestEvidenceFolderNum, destRootFolderPath, evidenceFolderPrefix):
         # 作成するエビデンスフォルダ名とフォルダパス
         evidenceFolderName = evidenceFolderPrefix + str(makeDestEvidenceFolderNum)
-        destEvidenceFolderPath = PathString(os.path.join(destRootFolderPath, evidenceFolderName))
+        destEvidenceFolderPath = PathLib.toSlashDelimiter(os.path.join(destRootFolderPath, evidenceFolderName))
         # エビデンスフォルダを作成
         os.makedirs(destEvidenceFolderPath)
         # 作成したフォルダのパスを返す
@@ -61,7 +61,7 @@ class CopyEvidence:
     # 引数のルートフォルダー直下に、ディレクトリ構造ごとファイルをコピーする
     def __copyFile(cls, srcFilePath, destRootFolderPath):
         # コピー対象のディレクトリパスとファイル名を取得
-        srcFolderPath = PathString(os.path.dirname(srcFilePath))
+        srcFolderPath = PathLib.toSlashDelimiter(os.path.dirname(srcFilePath))
         srcFileName   = os.path.basename(srcFilePath)
         # コピー先のディレクトリパスを生成
         # コピー対象のディレクトリ構造をそのままコピーするので単純に連結させる
@@ -70,7 +70,7 @@ class CopyEvidence:
         # ファイル名はコピー対象のファイル名から変更しないのでそのまま
         desFileName = srcFileName
         # コピー先のファイルパスを生成
-        desFilePath = PathString(os.path.join(desFolderPath, desFileName))
+        desFilePath = PathLib.toSlashDelimiter(os.path.join(desFolderPath, desFileName))
 
         # ファイルコピーは直上のディレクトリが存在する必要があるため、コピー先のディレクトリを作成
         os.makedirs(desFolderPath, exist_ok=True)
@@ -80,12 +80,11 @@ class CopyEvidence:
     @classmethod
     def __makeDesFolderPath(cls, destRootFolderPath, srcFolderPath):
         # 先頭の../を削除する
-        formatSrcFolderPath = PathString(srcFolderPath)
-        formatSrcFolderPath.deleteFrontDotDotSlash()
+        formatSrcFolderPath = PathLib.deleteFrontDotDotSlash(PathLib.toSlashDelimiter(srcFolderPath))
         # 先頭以外の../に対しては正規化する
         formatSrcFolderPath = os.path.normpath(formatSrcFolderPath)
 
-        desFolderPath = PathString(os.path.join(destRootFolderPath, formatSrcFolderPath))
+        desFolderPath = PathLib.toSlashDelimiter(os.path.join(destRootFolderPath, formatSrcFolderPath))
         return desFolderPath
 
     @classmethod

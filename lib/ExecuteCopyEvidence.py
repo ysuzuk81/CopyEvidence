@@ -4,7 +4,7 @@ import datetime
 from lib.ConfigValue import ConfigValue
 from lib.CopyEvidence import CopyEvidence
 import lib.Error as Error
-from lib.PathString import PathString
+from lib.PathLib import PathLib
 class LogMsg:
     def __init__(self):
         self.logMsg = ''
@@ -47,7 +47,7 @@ def getConfigFilePath(commandLineArgv):
 def formatEvidencePath(evidencePath):
     tempEvidencePath = str(evidencePath)
     outputResult = ' ' + tempEvidencePath
-    normEvidencePath = str(PathString(os.path.normpath(tempEvidencePath)))
+    normEvidencePath = PathLib.toSlashDelimiter(os.path.normpath(tempEvidencePath))
     if not tempEvidencePath == normEvidencePath:
         outputResult += ' (' + normEvidencePath + ')'
     return outputResult
