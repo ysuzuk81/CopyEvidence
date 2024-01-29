@@ -74,17 +74,14 @@ class ConfigValue:
         # PathString型に変換
         self.existEvidencePathList = [str(PathString(evidencePath)) for evidencePath in self.existEvidencePathList]
         self.notExistEvidencePathList = [str(PathString(evidencePath)) for evidencePath in self.notExistEvidencePathList]
-        print(self.existEvidencePathList)
 
         # パス名の重複を削除
         self.existEvidencePathList = list(set(self.existEvidencePathList))
         self.notExistEvidencePathList = list(set(self.notExistEvidencePathList))
-        print(self.existEvidencePathList)
 
         # ソート
         self.existEvidencePathList = natsort.natsorted(self.existEvidencePathList)
         self.notExistEvidencePathList = natsort.natsorted(self.notExistEvidencePathList)
-        print(self.existEvidencePathList)
     
     def isNotSetEvidencePath(self):
         return (self.existEvidencePathList == []) and (self.notExistEvidencePathList == [])
