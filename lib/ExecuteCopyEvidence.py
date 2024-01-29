@@ -1,10 +1,10 @@
 import os
 import datetime
 
-import lib_CopyEvidence.ConfigFile_IO as ConfigFile_IO
-import lib_CopyEvidence.CopyEvidence as CopyEvidence
-import lib_CopyEvidence.ValidateEvidencePath as ValidateEvidencePath
-import lib_CopyEvidence.Path as Path
+import lib.ConfigFile_IO as ConfigFile_IO
+import lib.CopyEvidence as CopyEvidence
+import lib.ValidateEvidencePath as ValidateEvidencePath
+import lib.Path as Path
 
 class Result:
     def __init__(self):

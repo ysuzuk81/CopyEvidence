@@ -2,7 +2,7 @@ import glob
 import os
 import natsort
 
-import lib_CopyEvidence.Path as Path
+import lib.Path as Path
 
 # エビデンスが存在するものとしないものを分けて返す
 def validate(evidenceSrcPath, evidencePathList):

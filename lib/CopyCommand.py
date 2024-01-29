@@ -1,7 +1,7 @@
 import os
 import shutil
 
-import lib_CopyEvidence.Path as Path
+import lib.Path as Path
 
 def makeDesFolderPath(desRootFolderPath, srcFolderPath):
     # 先頭の../を削除する

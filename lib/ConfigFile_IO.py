@@ -3,9 +3,9 @@ import natsort
 import os
 import re
 
-import lib_CopyEvidence.File_IO as File_IO
-import lib_CopyEvidence.Path as Path
-import lib_CopyEvidence.ValidateEvidencePath as ValidateEvidencePath
+import lib.File_IO as File_IO
+import lib.Path as Path
+import lib.ValidateEvidencePath as ValidateEvidencePath
 
 class Config:
     def __init__(self):

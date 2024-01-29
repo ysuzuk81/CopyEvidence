@@ -1,8 +1,8 @@
 import os
 import re
 
-import lib_CopyEvidence.CopyCommand as CopyCommand
-import lib_CopyEvidence.Path as Path
+import lib.CopyCommand as CopyCommand
+import lib.Path as Path
 
 # 既存のエビデンスフォルダのうち最大のフォルダ番号を取得
 def getMaxEvidenceFolderNumber(destRootFolderPath, evidenceFolderPrefix):

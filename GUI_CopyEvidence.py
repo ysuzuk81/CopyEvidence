@@ -1,8 +1,8 @@
 import sys
 import PySimpleGUI as sg
 
-import lib_CopyEvidence.ExecuteCopyEvidence as ExecuteCopyEvidence
-import lib_CopyEvidence.OutputExecuteResult as OutputExecuteResult
+import lib.ExecuteCopyEvidence as ExecuteCopyEvidence
+import lib.OutputExecuteResult as OutputExecuteResult
 
 key_CopyButton = 'key_CopyButton'
 key_LogTextField = 'key_LogTextField'
