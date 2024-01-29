@@ -16,12 +16,12 @@ class TextFile:
         self.textLineList = [textLine.rstrip() for textLine in self.textLineList if not textLine.rstrip() == '']
 
     @classmethod
-    def isCommentLine(cls, line, commentStartString):
+    def __isCommentLine(cls, line, commentStartString):
         if commentStartString == '':
             return False
         
         return line[0:len(commentStartString)] == commentStartString
 
     def deleteCommentLine(self, commentStartString):
-        self.textLineList = [textLine for textLine in self.textLineList if not TextFile.isCommentLine(textLine, commentStartString)]
+        self.textLineList = [textLine for textLine in self.textLineList if not TextFile.__isCommentLine(textLine, commentStartString)]
         return self
