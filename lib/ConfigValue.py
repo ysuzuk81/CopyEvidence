@@ -3,63 +3,88 @@ import natsort
 import os
 import re
 
-import lib.File_IO as File_IO
-import lib.Path as Path
-import lib.ValidateEvidencePath as ValidateEvidencePath
-
-class Config:
-    def __init__(self):
-        self.destRootFolderPath = ''
+from lib.TextFile import TextFile
+from lib.PathString import PathString
+import lib.Error as Error
+class ConfigValue:
+    def __init__(self, configFilePath):
+        self.destRootFolderPath = PathString('')
         self.evidenceFolderPrefix = ''
         self.existEvidencePathList = []
         self.notExistEvidencePathList = []
         self.isRequireEnter = False
 
-# コンフィグ値を読み出す
-def readConfig(configFilePath):
-    lineList = File_IO.readLines(configFilePath)
-    # コメントは削除
-    lineList = [line for line in lineList if not line[0] == '#']
+        configFile = TextFile(PathString(configFilePath)).deleteCommentLine('//')
 
-    config = Config()
-    evidenceSrcPath = ''
-    evidencePathList = []
-    isEvidencePathBlock = False
-    for line in lineList:
-        searchResult = re.findall('COPY_DEST_FOLDER_PATH=(.+)', line)
-        if not searchResult == []:
-            config.destRootFolderPath = Path.convertPathDelimiterToSlash(searchResult[0])
-            # 存在しないフォルダが保存先のフォルダに指定されていた場合はフォルダを新規作成する
-            if not os.path.isdir(config.destRootFolderPath):
-                os.makedirs(config.destRootFolderPath, exist_ok=True)
-            continue
+        isEvidencePathBlock = False
+        evidencePathStringList = []
+        for textLine in configFile.textLineList:
+            searchResult = re.findall('COPY_DEST_FOLDER_PATH=(.+)', textLine)
+            if not searchResult == []:
+                self.destRootFolderPath = PathString(searchResult[0])
+                if os.path.isdir(self.destRootFolderPath):
+                     # 存在しないフォルダが保存先のフォルダに指定されていた場合はフォルダを新規作成する
+                    os.makedirs(searchResult[0], exist_ok=True)
+                continue
 
-        searchResult = re.findall('EVIDENCE_FOLDER_PREFIX=(.+)', line)
-        if not searchResult == []:
-            config.evidenceFolderPrefix = searchResult[0]
-            continue
+            searchResult = re.findall('EVIDENCE_FOLDER_PREFIX=(.+)', textLine)
+            if not searchResult == []:
+                self.evidenceFolderPrefix = searchResult[0]
+                continue
 
-        if line == 'WAIT_ENTER':
-            config.isRequireEnter = True
-            continue
+            if textLine == 'WAIT_ENTER':
+                self.isRequireEnter = True
+                continue
+
+            searchResult = re.findall('EVIDENCE_SRC_PATH=(.+)', textLine)
+            if not searchResult == []:
+                evidenceSrcPath = PathString(searchResult[0])
+                continue
+
+            if textLine == 'EVIDENCE_PATH_START':
+                isEvidencePathBlock = True
+                continue
+            
+            if textLine == 'EVIDENCE_PATH_END':
+                isEvidencePathBlock = False
+                continue
+
+            if isEvidencePathBlock:
+                evidencePathStringList.append(textLine)
+                continue
         
-        searchResult = re.findall('EVIDENCE_SRC_PATH=(.+)', line)
-        if not searchResult == []:
-            evidenceSrcPath = Path.convertPathDelimiterToSlash(searchResult[0])
-            continue
-        
-        if line == 'EVIDENCE_PATH_START':
-            isEvidencePathBlock = True
-            continue
-        
-        if line == 'EVIDENCE_PATH_END':
-            isEvidencePathBlock = False
-            continue
+        targetEvidencePathList = []
+        # エビデンスの検索パスとエビデンスパスを繋げたパスを、コピーするエビデンスとする
+        for evidencePathString in evidencePathStringList:
+            targetEvidencePathList.append(
+                os.path.join(evidenceSrcPath, evidencePathString)
+            )
 
-        if isEvidencePathBlock:
-            evidencePathList.append(Path.convertPathDelimiterToSlash(line))
-            continue
+        for targetEvidencePath in targetEvidencePathList:
+            # 指定されたエビデンスパスを検索
+            searchEvidencePathList = glob.glob(targetEvidencePath)
+            # エビデンスが存在する場合
+            if not searchEvidencePathList == []:
+                self.existEvidencePathList.extend(searchEvidencePathList)
 
-    config.existEvidencePathList, config.notExistEvidencePathList = ValidateEvidencePath.validate(evidenceSrcPath, evidencePathList)
+            # エビデンスが存在しなかった場合
+            else:
+                self.notExistEvidencePathList.append(targetEvidencePath)
 
-    return config
+        # PathString型に変換
+        self.existEvidencePathList = [str(PathString(evidencePath)) for evidencePath in self.existEvidencePathList]
+        self.notExistEvidencePathList = [str(PathString(evidencePath)) for evidencePath in self.notExistEvidencePathList]
+        print(self.existEvidencePathList)
+
+        # パス名の重複を削除
+        self.existEvidencePathList = list(set(self.existEvidencePathList))
+        self.notExistEvidencePathList = list(set(self.notExistEvidencePathList))
+        print(self.existEvidencePathList)
+
+        # ソート
+        self.existEvidencePathList = natsort.natsorted(self.existEvidencePathList)
+        self.notExistEvidencePathList = natsort.natsorted(self.notExistEvidencePathList)
+        print(self.existEvidencePathList)
+    
+    def isNotSetEvidencePath(self):
+        return (self.existEvidencePathList == []) and (self.notExistEvidencePathList == [])

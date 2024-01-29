@@ -1,4 +1,4 @@
-def outputExecuteResult(executeResult):
+def execute(executeResult):
     print()
     print('<===========')
     print()
@@ -7,13 +7,13 @@ def outputExecuteResult(executeResult):
     print()
 
     # 正常メッセージが存在すれば全て出力
-    if not executeResult.successLogMsg == '':
+    if executeResult.successLogMsg.exists():
         print('[実行結果]')
         print(executeResult.successLogMsg)
         print()
 
     # エラーメッセージが存在すれば全て出力
-    if not executeResult.errorLogMsg == '':
+    if executeResult.errorLogMsg.exists():
         print('[発生したエラー]')
         print(executeResult.errorLogMsg)
         print()
