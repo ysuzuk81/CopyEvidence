@@ -41,17 +41,6 @@ class ExecuteResult:
         print('===========>')
         print()
 
-def getConfigFilePath(commandLineArgv):
-    if len(commandLineArgv) == 1:
-        raise Error.NotExistCommandLineArgument()
-
-    configFilePath = commandLineArgv[1]
-
-    if not os.path.isfile(configFilePath):
-        raise Error.NotExistPath(configFilePath)
-
-    return configFilePath
-
 def formatEvidencePath(evidencePath):
     tempEvidencePath = str(evidencePath)
     outputResult = ' ' + tempEvidencePath
@@ -62,11 +51,13 @@ def formatEvidencePath(evidencePath):
 
 # エビデンスのコピー処理を行い、実行結果を返す
 # コマンドライン引数をそのまま受け取る
-def execute(commandLineArgv):
+def execute(configFilePath):
     executeResult = ExecuteResult()
     try:
-        # コマンドライン引数からコンフィグファイルへのパスを取得
-        configFilePath = getConfigFilePath(commandLineArgv)
+        # 指定されたコンフィグファイルが存在しなければエラー
+        if not os.path.isfile(configFilePath):
+            raise Error.NotExistPath(configFilePath)
+        
         # コンフィグファイルからコンフィグ値を読み出す
         configValue = ConfigValue(configFilePath)
 

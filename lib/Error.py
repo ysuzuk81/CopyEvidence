@@ -5,6 +5,6 @@ class NotExistPath(Exception):
     def __str__(self):
         return str(self.path) + "が存在しません"
 
-class NotExistCommandLineArgument(Exception):
+class NotSetConfigFilePath(Exception):
     def __str__(self):
-        return "コマンドライン引数が指定されていません"
+        return "コンフィグファイルへのパスが指定されていません"

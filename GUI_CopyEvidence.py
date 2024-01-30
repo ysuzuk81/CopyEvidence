@@ -27,6 +27,10 @@ layout = [
 window = sg.Window('', layout,
     element_justification='center')
 
+if len(sys.argv) == 1:
+    print("コマンドライン引数でコンフィグファイルへのパスを指定してください")
+    exit()
+
 while True:
     event, values = window.read()
 
@@ -35,7 +39,7 @@ while True:
         exit()
 
     if event == key_CopyButton:
-        executeResult = ExecuteCopyEvidence.execute(sys.argv)
+        executeResult = ExecuteCopyEvidence.execute(sys.argv[1])
         executeResult.output()
 
         outputLogMsg = LogMsg()
