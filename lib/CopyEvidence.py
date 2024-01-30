@@ -22,10 +22,10 @@ class CopyEvidence:
         # エビデンスをコピーする
         for evidencePath in existEvidencePathList:
             if os.path.isfile(evidencePath):
-                CopyEvidence.__copyFile(evidencePath, destRootFolderPath)
+                CopyEvidence.__copyFile(evidencePath, destEvidenceFolderPath)
 
             elif os.path.isdir(evidencePath):
-                CopyEvidence.__copyFolder(evidencePath, destRootFolderPath)
+                CopyEvidence.__copyFolder(evidencePath, destEvidenceFolderPath)
 
             else:
                 raise Error.Error__NotExistPath(evidencePath)
