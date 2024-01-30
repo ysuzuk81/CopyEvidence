@@ -7,7 +7,7 @@ class TextFile:
         self.textLineList = []
 
         if not os.path.isfile(self.filePath):
-            raise Error.Error__NotExistPath(self.filePath)
+            raise Error.NotExistPath(self.filePath)
 
         with open(self.filePath, encoding="utf-8") as file:
             self.textLineList = file.readlines()

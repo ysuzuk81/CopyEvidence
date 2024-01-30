@@ -28,7 +28,7 @@ class CopyEvidence:
                 CopyEvidence.__copyFolder(evidencePath, destEvidenceFolderPath)
 
             else:
-                raise Error.Error__NotExistPath(evidencePath)
+                raise Error.NotExistPath(evidencePath)
 
         # コピー先のフォルダパスを返す
         return destEvidenceFolderPath

@@ -2,8 +2,7 @@ import sys
 import PySimpleGUI as sg
 
 import lib.ExecuteCopyEvidence as ExecuteCopyEvidence
-from lib.ExecuteCopyEvidence import LogMsg 
-import lib.OutputExecuteResult as OutputExecuteResult
+from lib.LogMsg import LogMsg
 
 key_CopyButton = 'key_CopyButton'
 key_LogTextField = 'key_LogTextField'
@@ -36,24 +35,19 @@ while True:
         exit()
 
     if event == key_CopyButton:
-        try:
-            executeResult = ExecuteCopyEvidence.execute(sys.argv)
-            OutputExecuteResult.execute(executeResult)
-        except Exception as err:
-            # エラーが発生したらシェルに出力する
-            print(err)
-        finally:
-            outputLogMsg = LogMsg()
-            outputLogMsg.println('[' + executeResult.timestampString + ']')
-            # 何らかのエラーが発生した場合
-            if executeResult.isRaiseError():
-                outputLogMsg.println('何らかのエラーが発生しました')
-                outputLogMsg.print('シェルの出力を確認してください')
+        executeResult = ExecuteCopyEvidence.execute(sys.argv)
+        executeResult.output()
 
-            # 正常終了の場合
-            else:
-                outputLogMsg.println(str(executeResult.destEvidenceFolderPath))
-                outputLogMsg.print('にエビデンスをコピーしました')
+        outputLogMsg = LogMsg()
+        outputLogMsg.println(f'[{executeResult.timestampString}]')
+        # 何らかのエラーが発生した場合
+        if executeResult.isRaiseError():
+            outputLogMsg.println('何らかのエラーが発生しました')
+            outputLogMsg.print('シェルの出力を確認してください')
 
-            window[key_LogTextField].update(outputLogMsg)
-        
+        # 正常終了の場合
+        else:
+            outputLogMsg.println(executeResult.destEvidenceFolderPath)
+            outputLogMsg.print('にエビデンスをコピーしました')
+
+        window[key_LogTextField].update(outputLogMsg)

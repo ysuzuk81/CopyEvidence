@@ -5,22 +5,7 @@ from lib.ConfigValue import ConfigValue
 from lib.CopyEvidence import CopyEvidence
 import lib.Error as Error
 from lib.PathLib import PathLib
-class LogMsg:
-    def __init__(self):
-        self.logMsg = ''
-    
-    def print(self, logMsg):
-        self.logMsg += str(logMsg)
-    
-    def println(self, logMsg):
-        self.print(logMsg)
-        self.logMsg += '\n'
-
-    def exists(self):
-        return not self.logMsg == ''
-    
-    def __str__(self):
-        return self.logMsg
+from lib.LogMsg import LogMsg
 
 class ExecuteResult:
     def __init__(self):
@@ -32,15 +17,38 @@ class ExecuteResult:
     
     def isRaiseError(self):
         return self.errorLogMsg.exists()
+    
+    def output(self):
+        print()
+        print('<===========')
+        print()
+        print('[実行日時]')
+        print(self.timestampString)
+        print()
+
+        # 正常メッセージが存在すれば全て出力
+        if self.successLogMsg.exists():
+            print('[実行結果]')
+            print(self.successLogMsg)
+            print()
+
+        # エラーメッセージが存在すれば全て出力
+        if self.errorLogMsg.exists():
+            print('[発生したエラー]')
+            print(self.errorLogMsg)
+            print()
+
+        print('===========>')
+        print()
 
 def getConfigFilePath(commandLineArgv):
     if len(commandLineArgv) == 1:
-        raise Error.Error__NotExistCommandLineArgument()
+        raise Error.NotExistCommandLineArgument()
 
     configFilePath = commandLineArgv[1]
 
     if not os.path.isfile(configFilePath):
-        raise Error.Error__NotExistPath(configFilePath)
+        raise Error.NotExistPath(configFilePath)
 
     return configFilePath
 
@@ -49,7 +57,7 @@ def formatEvidencePath(evidencePath):
     outputResult = ' ' + tempEvidencePath
     normEvidencePath = PathLib.toSlashDelimiter(os.path.normpath(tempEvidencePath))
     if not tempEvidencePath == normEvidencePath:
-        outputResult += ' (' + normEvidencePath + ')'
+        outputResult += f' ({normEvidencePath})'
     return outputResult
 
 # エビデンスのコピー処理を行い、実行結果を返す
@@ -80,7 +88,7 @@ def execute(commandLineArgv):
             executeResult.successLogMsg.println('下記のエビデンスを')
             executeResult.successLogMsg.println(executeResult.destEvidenceFolderPath)
             executeResult.successLogMsg.println('にコピーしました')
-            executeResult.successLogMsg.println('')
+            executeResult.successLogMsg.println()
             for evidencePath in configValue.existEvidencePathList:
                 executeResult.successLogMsg.println(formatEvidencePath(evidencePath))
 
