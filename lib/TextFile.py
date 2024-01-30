@@ -12,7 +12,7 @@ class TextFile:
         with open(self.filePath, encoding="utf-8") as file:
             self.textLineList = file.readlines()
 
-        # 改行のみの行を削除
+        # 改行のみの行を削除 & 行末の改行を削除
         self.textLineList = [textLine.rstrip() for textLine in self.textLineList if not textLine.rstrip() == '']
 
     @classmethod
